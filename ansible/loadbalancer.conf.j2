@@ -1,0 +1,14 @@
+upstream backend {
+    least_conn;
+    {% for server in backend_servers %}
+    server {{ server.host }}:80 weight={{ server.weight }};
+    {% endfor %}
+}
+
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://backend;
+    }
+}

@@ -1,0 +1,27 @@
+---
+- hosts: loadbalancer
+  become: true
+  vars:
+    backend_servers:
+      - host: node2
+        weight: 1
+      - host: node3
+        weight: 1
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Setup Nginx as Load Balancer
+      template:
+        src: loadbalancer.conf.j2
+        dest: /etc/nginx/conf.d/loadbalancer.conf
+      notify: Restart Nginx
+
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
+

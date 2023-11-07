@@ -1,0 +1,19 @@
+---
+- name: Install Nginx on all servers
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+      notify: start nginx
+
+  handlers:
+    - name: start nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes

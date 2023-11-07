@@ -1,0 +1,17 @@
+---
+- name: Update Nginx index page on backend servers
+  hosts: backend
+  become: yes
+
+  tasks:
+    - name: Create index.html with the hostname
+      template:
+        src: index.html.j2
+        dest: /usr/share/nginx/html/index.html
+      notify: reload nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
